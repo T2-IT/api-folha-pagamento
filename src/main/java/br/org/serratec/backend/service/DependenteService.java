@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.org.serratec.backend.model.Dependente;
+import br.org.serratec.backend.model.Funcionario;
 import br.org.serratec.backend.repository.DependenteRepository;
 
 @Service
@@ -20,11 +21,13 @@ public class DependenteService {
 	@Autowired
 	private DependenteRepository dependenteRepository;
 
-	public Dependente inserir(@Valid @RequestBody Dependente dependente) {
+	public Dependente inserir(@RequestBody Dependente dependente) {
+		System.out.println("Inserir dependente service");
 		return dependenteRepository.save(dependente);
 	}
 
 	public List<Dependente> inserirTodos(List<Dependente> dependentes) {
+		System.out.println("Inserir todos os dependentes service");
 		return dependenteRepository.saveAll(dependentes);
 	}
 

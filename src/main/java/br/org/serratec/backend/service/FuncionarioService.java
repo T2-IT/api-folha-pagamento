@@ -22,52 +22,53 @@ public class FuncionarioService {
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
 
-	public Funcionario inserir(@Valid @RequestBody Funcionario funcionario) {
+	public Funcionario inserir(@RequestBody Funcionario funcionario) {
+		System.out.println("Inserir funcionario");
 		return funcionarioRepository.save(funcionario);
 	}
 
 	public List<Funcionario> inserirTodos(List<Funcionario> funcionarios) {
+		System.out.println("Inserir todos os funcionarios service");
 		return funcionarioRepository.saveAll(funcionarios);
 	}
 
 	public ResponseEntity<Funcionario> buscar(@PathVariable Long id) {
+		Funcionario funcionario = new Funcionario();
+
+		if (funcionario.getSalarioBruto() >= 1100.01 && funcionario.getSalarioBruto() <= 2203.48) {
+			funcionario.setDescontoInss(
+					funcionario.getSalarioBruto() * TaxasInss.TAXA1.getTaxa() - TaxasInss.TAXA1.getDeducao());
+		} else if (funcionario.getSalarioBruto() >= 2203.49 && funcionario.getSalarioBruto() <= 3305.22) {
+			funcionario.setDescontoInss(
+					funcionario.getSalarioBruto() * TaxasInss.TAXA2.getTaxa() - TaxasInss.TAXA2.getDeducao());
+		} else if (funcionario.getSalarioBruto() >= 3305.23 && funcionario.getSalarioBruto() <= 6433.57) {
+			funcionario.setDescontoInss(
+					funcionario.getSalarioBruto() * TaxasInss.TAXA3.getTaxa() - TaxasInss.TAXA3.getDeducao());
+		} else if (funcionario.getSalarioBruto() > 6433.57) {
+			funcionario.setDescontoInss(6433.57 * TaxasInss.TAXA5.getTaxa() - TaxasInss.TAXA5.getDeducao());
+		} else {
+			funcionario.setDescontoInss(
+					funcionario.getSalarioBruto() * TaxasInss.TAXA1.getTaxa() - TaxasInss.TAXA1.getDeducao());
+		}
+
+		double salarioBase = funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+				- funcionario.getDescontoInss();
+		if (salarioBase < 1903.98) {
+			funcionario.setDescontoIR(0);
+		} else if (salarioBase >= 1903.98 && salarioBase <= 2826.65) {
+			funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA1.getAliquota()) - TaxaIR.TAXA1.getDeducao());
+		} else if (salarioBase >= 2826.66 && salarioBase <= 3751.05) {
+			funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA2.getAliquota()) - TaxaIR.TAXA2.getDeducao());
+		} else if (salarioBase >= 3751.06 && salarioBase <= 4664.68) {
+			funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA3.getAliquota()) - TaxaIR.TAXA3.getDeducao());
+		} else {
+			funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA4.getAliquota()) - TaxaIR.TAXA4.getDeducao());
+		}
+
+		funcionario.setSalarioLiquido(
+				funcionario.getSalarioBruto() - funcionario.getDescontoInss() - funcionario.getDescontoIR());
 		Optional<Funcionario> funcionarios = funcionarioRepository.findById(id);
 		if (funcionarios.isPresent()) {
-			Funcionario funcionario = new Funcionario();
-
-			if (funcionario.getSalarioBruto() >= 1100.01 && funcionario.getSalarioBruto() <= 2203.48) {
-				funcionario.setDescontoInss(
-						funcionario.getSalarioBruto() * TaxasInss.TAXA1.getTaxa() - TaxasInss.TAXA1.getDeducao());
-			} else if (funcionario.getSalarioBruto() >= 2203.49 && funcionario.getSalarioBruto() <= 3305.22) {
-				funcionario.setDescontoInss(
-						funcionario.getSalarioBruto() * TaxasInss.TAXA2.getTaxa() - TaxasInss.TAXA2.getDeducao());
-			} else if (funcionario.getSalarioBruto() >= 3305.23 && funcionario.getSalarioBruto() <= 6433.57) {
-				funcionario.setDescontoInss(
-						funcionario.getSalarioBruto() * TaxasInss.TAXA3.getTaxa() - TaxasInss.TAXA3.getDeducao());
-			} else if (funcionario.getSalarioBruto() > 6433.57) {
-				funcionario.setDescontoInss(6433.57 * TaxasInss.TAXA5.getTaxa() - TaxasInss.TAXA5.getDeducao());
-			} else {
-				funcionario.setDescontoInss(
-						funcionario.getSalarioBruto() * TaxasInss.TAXA1.getTaxa() - TaxasInss.TAXA1.getDeducao());
-			}
-
-			double salarioBase = funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
-					- funcionario.getDescontoInss();
-			if (salarioBase < 1903.98) {
-				funcionario.setDescontoIR(0);
-			} else if (salarioBase >= 1903.98 && salarioBase <= 2826.65) {
-				funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA1.getAliquota()) - TaxaIR.TAXA1.getDeducao());
-			} else if (salarioBase >= 2826.66 && salarioBase <= 3751.05) {
-				funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA2.getAliquota()) - TaxaIR.TAXA2.getDeducao());
-			} else if (salarioBase >= 3751.06 && salarioBase <= 4664.68) {
-				funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA3.getAliquota()) - TaxaIR.TAXA3.getDeducao());
-			} else {
-				funcionario.setDescontoIR(((salarioBase) * TaxaIR.TAXA4.getAliquota()) - TaxaIR.TAXA4.getDeducao());
-			}
-
-			funcionario.setSalarioLiquido(
-					funcionario.getSalarioBruto() - funcionario.getDescontoInss() - funcionario.getDescontoIR());
-
 			return ResponseEntity.ok(funcionarios.get());
 		}
 		return ResponseEntity.notFound().build();

@@ -23,10 +23,13 @@ public class Dependente extends Pessoa {
 	@Column(name = "id_dependente")
 	@ApiModelProperty(value = "Identificador único do cliente")
 	private Long id;
-	@ApiModelProperty(value = "Enum que define o parentesco do dependente  ")
+
+	@ApiModelProperty(value = "Enum que define o parentesco do dependente")
 	private Parentesco parentesco;
-	@ApiModelProperty("Calcula idade do dependenteee")
-	private Period period;
+
+//	@ApiModelProperty("Calcula idade do dependente")
+//	private Period period;
+
 	@ManyToOne
 	@JoinColumn(name = "id_funcionario")
 	private Funcionario funcionario;
@@ -35,11 +38,12 @@ public class Dependente extends Pessoa {
 
 	}
 
-	public Dependente(@Size(max = 30) String nome, @CPF String cpf, LocalDate dataNascimento, Long id,
-			Parentesco parentesco) {
+	public Dependente(@Size(max = 30) String nome, String cpf, LocalDate dataNascimento, Long id, Parentesco parentesco,
+			Funcionario funcionario) {
 		super(nome, cpf, dataNascimento);
 		this.id = id;
 		this.parentesco = parentesco;
+		this.funcionario = funcionario;
 	}
 
 	public Parentesco getParentesco() {
@@ -58,13 +62,13 @@ public class Dependente extends Pessoa {
 		this.id = id;
 	}
 
-	public Period getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(Period period) {
-		this.period = period;
-	}
+//	public Period getPeriod() {
+//		return period;
+//	}
+//
+//	public void setPeriod(Period period) {
+//		this.period = period;
+//	}
 
 	public Funcionario getFuncionario() {
 		return funcionario;

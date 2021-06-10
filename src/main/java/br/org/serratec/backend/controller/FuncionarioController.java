@@ -1,8 +1,6 @@
 package br.org.serratec.backend.controller;
 
 import java.util.List;
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.org.serratec.backend.model.Funcionario;
-import br.org.serratec.backend.repository.FuncionarioRepository;
 import br.org.serratec.backend.service.FuncionarioService;
 
 @RestController
@@ -31,13 +28,15 @@ public class FuncionarioController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Funcionario inserir(@Valid @RequestBody Funcionario funcionario) {
+	public Funcionario inserir(@RequestBody Funcionario funcionario) {
+		System.out.println("Inserir funcionario");
 		return funcionarioService.inserir(funcionario);
 	}
 
 	@PostMapping("/inserirTodos")
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Funcionario> inserirTodos(List<Funcionario> funcionarios) {
+		System.out.println("Inserir todos os funcionarios");
 		return funcionarioService.inserirTodos(funcionarios);
 	}
 

@@ -1,7 +1,6 @@
 package br.org.serratec.backend.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.org.serratec.backend.model.Dependente;
-import br.org.serratec.backend.repository.DependenteRepository;
 import br.org.serratec.backend.service.DependenteService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -40,7 +38,8 @@ public class DependenteController {
 			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Quando ocorre uma exceçãooo") })
-	public Dependente inserir(@Valid @RequestBody Dependente dependente) {
+	public Dependente inserir(@RequestBody Dependente dependente) {
+		System.out.println("Inserir dependente");
 		return dependenteService.inserir(dependente);
 	}
 
@@ -53,6 +52,7 @@ public class DependenteController {
 			@ApiResponse(code = 505, message = "Quando ocorre uma exceção") })
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Dependente> inserirTodos(List<Dependente> dependentes) {
+		System.out.println("Inserir todos os dependentes");
 		return dependenteService.inserirTodos(dependentes);
 	}
 

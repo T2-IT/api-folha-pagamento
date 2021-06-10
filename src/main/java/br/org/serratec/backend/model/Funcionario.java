@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
@@ -26,20 +25,27 @@ public class Funcionario extends Pessoa {
 	@Column(name = "id_funcionario")
 	@ApiModelProperty(value = "Identificador único do funcionario")
 	private Long id;
+	
 	@ApiModelProperty(value = "Salário bruto do funcionario")
 	private double salarioBruto;
+	
 	@ApiModelProperty(value = "Desconto Inss do funcionario")
 	private double descontoInss;
+	
 	@ApiModelProperty(value = "Salário liquido do funcionario")
 	private double salarioLiquido;
+	
 	@ApiModelProperty(value = "Deconto IR do funcionario")
 	private double descontoIR;
+	
 	@ApiModelProperty(value = "Taxas Inss do funcionario")
 	private TaxasInss taxasInss;
+	
 	@ApiModelProperty(value = "Taxa IR o funcionario")
 	private TaxaIR taxaIR;
-	@ApiModelProperty(value = "Calcula idade do funcionario")
-	private Period period;
+	
+//	@ApiModelProperty(value = "Calcula idade do funcionario")
+//	private Period period;
 
 	@OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
 	private List<Dependente> dependentes = new ArrayList<Dependente>();
@@ -48,7 +54,7 @@ public class Funcionario extends Pessoa {
 
 	}
 
-	public Funcionario(@Size(max = 30) String nome, @CPF String cpf, LocalDate dataNascimento, Long id,
+	public Funcionario(@Size(max = 30) String nome, String cpf, LocalDate dataNascimento, Long id,
 			double salarioBruto, List<Dependente> dependentes) {
 		super(nome, cpf, dataNascimento);
 		this.id = id;
@@ -120,13 +126,13 @@ public class Funcionario extends Pessoa {
 		this.taxaIR = taxaIR;
 	}
 
-	public Period getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(Period period) {
-		this.period = period;
-	}
+//	public Period getPeriod() {
+//		return period;
+//	}
+//
+//	public void setPeriod(Period period) {
+//		this.period = period;
+//	}
 
 	@Override
 	public int hashCode() {
