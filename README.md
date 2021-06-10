@@ -26,7 +26,7 @@ Aqui estão as tecnologias usadas neste projeto
 
 ## Links
 
-- Repositório: [GitHub](https://github.com/T2-IT/residencia-api/tree/master/folha-pagamento)
+- Repositório: [GitHub]()
 - Documentação da API: [Swagger]()
 
 
