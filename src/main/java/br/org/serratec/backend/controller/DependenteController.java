@@ -30,88 +30,73 @@ import io.swagger.annotations.ApiResponses;
 public class DependenteController {
 
 	@Autowired
-	private DependenteRepository dependenteRepository;
-	
-	@Autowired
 	private DependenteService dependenteService;
-	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation(value="Insere dados de um dependente", notes="Inserir dependente")
+	@ApiOperation(value = "Insere dados de um dependente", notes = "Inserir dependente")
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Dependente cadastrado com sucesso"),
-			@ApiResponse(code = 401 , message="Erro de Autenticação"),
-			@ApiResponse(code = 403 , message="Você não tem permissão para acessar o recurso"),
+			@ApiResponse(code = 401, message = "Erro de Autenticação"),
+			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
-			@ApiResponse(code = 505 , message="Quando ocorre uma exceçãooo")})
+			@ApiResponse(code = 505, message = "Quando ocorre uma exceçãooo") })
 	public Dependente inserir(@Valid @RequestBody Dependente dependente) {
-		return dependenteRepository.save(dependente);
+		return dependenteService.inserir(dependente);
 	}
+
 	@PostMapping("/inserirTodos")
-	@ApiOperation(value="Insere dados de vários dependentes", notes="Inserir dependentes")
+	@ApiOperation(value = "Insere dados de vários dependentes", notes = "Inserir dependentes")
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Dependentes cadastrados com sucesso"),
-			@ApiResponse(code = 401 , message="Erro de Autenticação"),
-			@ApiResponse(code = 403 , message="Você não tem permissão para acessar o recurso"),
+			@ApiResponse(code = 401, message = "Erro de Autenticação"),
+			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
-			@ApiResponse(code = 505 , message="Quando ocorre uma exceção")})
+			@ApiResponse(code = 505, message = "Quando ocorre uma exceção") })
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Dependente> inserirTodos(List<Dependente> dependentes) {
-		return dependenteRepository.saveAll(dependentes);
+		return dependenteService.inserirTodos(dependentes);
 	}
 
 	@GetMapping("{id}")
-	@ApiOperation(value="Retorna um dependente", notes="Dependente")
+	@ApiOperation(value = "Retorna um dependente", notes = "Dependente")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna um dependente"),
-			@ApiResponse(code = 401 , message="Erro de Autenticação"),
-			@ApiResponse(code = 403 , message="Você não tem permissão para acessar o recurso"),
+			@ApiResponse(code = 401, message = "Erro de Autenticação"),
+			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
-			@ApiResponse(code = 505 , message="Quando ocorre uma exceção")})
+			@ApiResponse(code = 505, message = "Quando ocorre uma exceção") })
 	public ResponseEntity<Dependente> buscar(@PathVariable Long id) {
-		Optional<Dependente> dependente = dependenteRepository.findById(id);
-		if (dependente.isPresent()) {
-			return ResponseEntity.ok(dependente.get());
-		}
-		return ResponseEntity.notFound().build();
+		return dependenteService.buscar(id);
 	}
 
 	@GetMapping
-	@ApiOperation(value="Lista todos os dependentes ", notes="Listagem de dependentes")
+	@ApiOperation(value = "Lista todos os dependentes ", notes = "Listagem de dependentes")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna todos os dependentes"),
-			@ApiResponse(code = 401 , message="Erro de Autenticação"),
-			@ApiResponse(code = 403 , message="Você não tem permissão para acessar o recurso"),
+			@ApiResponse(code = 401, message = "Erro de Autenticação"),
+			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
-			@ApiResponse(code = 505 , message="Quando ocorre uma exceção")})
+			@ApiResponse(code = 505, message = "Quando ocorre uma exceção") })
 	public ResponseEntity<List<Dependente>> listar() {
-		List<Dependente> dependentes = dependenteRepository.findAll();
-		return ResponseEntity.ok(dependentes);
+		return dependenteService.listar();
 	}
+
 	@PutMapping("{id}")
-	@ApiOperation(value="Atualiza dados de um dependente", notes="Atualizar dependente")
+	@ApiOperation(value = "Atualiza dados de um dependente", notes = "Atualizar dependente")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Dependente atualizado"),
-			@ApiResponse(code = 401 , message="Erro de Autenticação"),
-			@ApiResponse(code = 403 , message="Você não tem permissão para acessar o recurso"),
+			@ApiResponse(code = 401, message = "Erro de Autenticação"),
+			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
-			@ApiResponse(code = 505 , message="Quando ocorre uma exceção")})
-	public ResponseEntity<Dependente> atualizar(@Valid @RequestBody Dependente dependente, @PathVariable Long id){
-		if (!dependenteRepository.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		dependente.setId(id);
-		dependente= dependenteRepository.save(dependente);
-		return ResponseEntity.ok(dependente);
+			@ApiResponse(code = 505, message = "Quando ocorre uma exceção") })
+	public ResponseEntity<Dependente> atualizar(@Valid @RequestBody Dependente dependente, @PathVariable Long id) {
+		return dependenteService.atualizar(dependente, id);
 	}
-	
+
 	@DeleteMapping("{id}")
-	@ApiOperation(value="Remove um dependente", notes="Remover dependente")
+	@ApiOperation(value = "Remove um dependente", notes = "Remover dependente")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Dependente removido"),
-			@ApiResponse(code = 401 , message="Erro de Autenticação"),
-			@ApiResponse(code = 403 , message="Você não tem permissão para acessar o recurso"),
+			@ApiResponse(code = 401, message = "Erro de Autenticação"),
+			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
-			@ApiResponse(code = 505 , message="Quando ocorre uma exceção")})
-	public ResponseEntity<Void> deletarDependente(@PathVariable Long id){
-		if (!dependenteRepository.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		dependenteRepository.deleteById(id);
-		return ResponseEntity.noContent().build();
+			@ApiResponse(code = 505, message = "Quando ocorre uma exceção") })
+	public ResponseEntity<Void> deletarDependente(@PathVariable Long id) {
+		return dependenteService.deletarDependente(id);
 	}
 }

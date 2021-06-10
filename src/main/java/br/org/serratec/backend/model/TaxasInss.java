@@ -2,7 +2,7 @@ package br.org.serratec.backend.model;
 
 public enum TaxasInss {
 	TAXA1(0.09, 16.5), TAXA2(0.12, 82.61), TAXA3(0.14, 148.72), TAXA4(0.14, 148.72), TAXA5(0.075, 0);
-	//kkkkkkkkkkkkkkkkkkkk
+	
 	private double taxa;
 	private double deducao;
 

@@ -2,8 +2,10 @@ package br.org.serratec.backend.model;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,32 +21,28 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Funcionario extends Pessoa {
-	//kkkkkkkkkkkkkkkkkkkk
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_funcionario")
-	@ApiModelProperty(value="Identificador único do funcionario")
+	@ApiModelProperty(value = "Identificador único do funcionario")
 	private Long id;
-    @ApiModelProperty(value="Salário bruto do funcionario")
+	@ApiModelProperty(value = "Salário bruto do funcionario")
 	private double salarioBruto;
-    @ApiModelProperty(value="Desconto Inss do funcionario")
+	@ApiModelProperty(value = "Desconto Inss do funcionario")
 	private double descontoInss;
-    @ApiModelProperty(value="Salário liquido do funcionario")
+	@ApiModelProperty(value = "Salário liquido do funcionario")
 	private double salarioLiquido;
-    @ApiModelProperty(value="Deconto IR do funcionario")
+	@ApiModelProperty(value = "Deconto IR do funcionario")
 	private double descontoIR;
-    @ApiModelProperty(value="Taxas Inss do funcionario")
+	@ApiModelProperty(value = "Taxas Inss do funcionario")
 	private TaxasInss taxasInss;
-    @ApiModelProperty(value="Taxa IR o funcionario")
+	@ApiModelProperty(value = "Taxa IR o funcionario")
 	private TaxaIR taxaIR;
-    @ApiModelProperty(value="Calcula idade do funcionario")
+	@ApiModelProperty(value = "Calcula idade do funcionario")
 	private Period period;
-	
-	@OneToMany
-	@JoinColumn(name = "id_dependente")
-	private List<Dependente> dependentes;
 
-	
+	@OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
+	private List<Dependente> dependentes = new ArrayList<Dependente>();
 
 	public Funcionario() {
 

@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
@@ -19,15 +21,18 @@ public class Dependente extends Pessoa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_dependente")
-	@ApiModelProperty(value="Identificador único do cliente")
+	@ApiModelProperty(value = "Identificador único do cliente")
 	private Long id;
-	@ApiModelProperty(value="Enum que define o parentesco do dependente  ")
+	@ApiModelProperty(value = "Enum que define o parentesco do dependente  ")
 	private Parentesco parentesco;
 	@ApiModelProperty("Calcula idade do dependenteee")
 	private Period period;
+	@ManyToOne
+	@JoinColumn(name = "id_funcionario")
+	private Funcionario funcionario;
 
 	public Dependente() {
-		
+
 	}
 
 	public Dependente(@Size(max = 30) String nome, @CPF String cpf, LocalDate dataNascimento, Long id,
@@ -59,6 +64,14 @@ public class Dependente extends Pessoa {
 
 	public void setPeriod(Period period) {
 		this.period = period;
+	}
+
+	public Funcionario getFuncionario() {
+		return funcionario;
+	}
+
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
 	}
 
 	@Override

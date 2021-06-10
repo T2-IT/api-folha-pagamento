@@ -25,9 +25,6 @@ import br.org.serratec.backend.service.FuncionarioService;
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioController {
-//fjufgu
-	@Autowired
-	private FuncionarioRepository funcionarioRepository;
 
 	@Autowired
 	private FuncionarioService funcionarioService;
@@ -37,44 +34,30 @@ public class FuncionarioController {
 	public Funcionario inserir(@Valid @RequestBody Funcionario funcionario) {
 		return funcionarioService.inserir(funcionario);
 	}
+
 	@PostMapping("/inserirTodos")
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Funcionario> inserirTodos(List<Funcionario> funcionarios) {
-		return funcionarioRepository.saveAll(funcionarios);
+		return funcionarioService.inserirTodos(funcionarios);
 	}
 
 	@GetMapping("{id}")
 	public ResponseEntity<Funcionario> buscar(@PathVariable Long id) {
-		Optional<Funcionario> funcionarios = funcionarioRepository.findById(id);
-		if (funcionarios.isPresent()) {
-			return ResponseEntity.ok(funcionarios.get());
-		}
-		return ResponseEntity.notFound().build();
+		return funcionarioService.buscar(id);
 	}
 
 	@GetMapping
 	public ResponseEntity<List<Funcionario>> listar() {
-		List<Funcionario> funcionarios = funcionarioRepository.findAll();
-		return ResponseEntity.ok(funcionarios);
+		return funcionarioService.listar();
 	}
 
 	@PutMapping("{id}")
 	public ResponseEntity<Funcionario> atualizar(@Valid @RequestBody Funcionario funcionario, @PathVariable Long id) {
-		if (!funcionarioRepository.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		funcionario.setId(id);
-		funcionarioRepository.save(funcionario);
-		return ResponseEntity.ok(funcionario);
-
+		return funcionarioService.atualizar(funcionario, id);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Long id) {
-		if (!funcionarioRepository.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		funcionarioRepository.deleteById(id);
-		return ResponseEntity.noContent().build();
+		return funcionarioService.deletar(id);
 	}
 }

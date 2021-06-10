@@ -6,7 +6,7 @@ public class FuncionarioDTO {
 	private String nome;
 	private String cpf;
 	private double salarioLiquido;
-//kkkkkkkkkkkkkkkkkkkkkk
+
 	public FuncionarioDTO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -17,8 +17,6 @@ public class FuncionarioDTO {
 		this.cpf = cpf;
 		this.salarioLiquido = salarioLiquido;
 	}
-	
-	
 
 	public FuncionarioDTO(Funcionario funcionario) {
 		super();
