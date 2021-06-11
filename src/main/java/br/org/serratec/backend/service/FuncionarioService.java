@@ -80,6 +80,7 @@ public class FuncionarioService {
 
 		funcionario.setSalarioLiquido(
 				funcionario.getSalarioBruto() - funcionario.getDescontoInss() - funcionario.getDescontoIR());
+		System.out.println(funcionario.getDependentes().size());
 		return funcionarioRepository.save(funcionario);
 	}
 
