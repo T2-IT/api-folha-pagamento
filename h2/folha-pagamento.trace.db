@@ -7,3 +7,6 @@ insert into funcionario (id_funcionario, cpf, data_nascimento, nome, descontoir,
 2021-06-10 11:47:09 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DROP TABLE =[*]FUNCIONARIO"; expected "identifier"; SQL statement:
 DROP TABLE =FUNCIONARIO [42001-200]
+2021-06-10 21:01:58 jdbc[93]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DROP TABLE[*]"; expected "identifier"; SQL statement:
+DROP TABLE [42001-200]
