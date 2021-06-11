@@ -14,10 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.br.CPF;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -29,41 +26,49 @@ public class Funcionario extends Pessoa {
 	@Column(name = "id_funcionario")
 	@ApiModelProperty(value = "Identificador único do funcionario")
 	private Long id;
-	
+
 	@ApiModelProperty(value = "Salário bruto do funcionario")
 	private double salarioBruto;
-	
+
 	@ApiModelProperty(value = "Desconto Inss do funcionario")
 	private double descontoInss;
-	
+
 	@ApiModelProperty(value = "Salário liquido do funcionario")
 	private double salarioLiquido;
-	
+
 	@ApiModelProperty(value = "Deconto IR do funcionario")
 	private double descontoIR;
-	
+
 	@ApiModelProperty(value = "Taxas Inss do funcionario")
 	private TaxasInss taxasInss;
-	
+
 	@ApiModelProperty(value = "Taxa IR o funcionario")
 	private TaxaIR taxaIR;
-	
-//	@ApiModelProperty(value = "Calcula idade do funcionario")
-//	private Period period;
-	
+
+	@ApiModelProperty(value = "Calcula idade do funcionario")
+	private Period idade;
+
 	@JsonManagedReference
 	@OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
+	@Size(max = 3)
 	private List<Dependente> dependentes = new ArrayList<Dependente>();
 
 	public Funcionario() {
 
 	}
 
-	public Funcionario(@Size(max = 30) String nome, String cpf, LocalDate dataNascimento, Long id,
-			double salarioBruto, List<Dependente> dependentes) {
+	public Funcionario(@Size(max = 30) String nome, String cpf, LocalDate dataNascimento, Long id, double salarioBruto,
+			double descontoInss, double salarioLiquido, double descontoIR, TaxasInss taxasInss, TaxaIR taxaIR,
+			Period idade, @Size(max = 3) List<Dependente> dependentes) {
 		super(nome, cpf, dataNascimento);
 		this.id = id;
 		this.salarioBruto = salarioBruto;
+		this.descontoInss = descontoInss;
+		this.salarioLiquido = salarioLiquido;
+		this.descontoIR = descontoIR;
+		this.taxasInss = taxasInss;
+		this.taxaIR = taxaIR;
+		this.idade = idade;
 		this.dependentes = dependentes;
 	}
 
@@ -131,13 +136,13 @@ public class Funcionario extends Pessoa {
 		this.taxaIR = taxaIR;
 	}
 
-//	public Period getPeriod() {
-//		return period;
-//	}
-//
-//	public void setPeriod(Period period) {
-//		this.period = period;
-//	}
+	public Period getIdade() {
+		return idade;
+	}
+
+	public void setIdade(Period idade) {
+		this.idade = idade;
+	}
 
 	@Override
 	public int hashCode() {

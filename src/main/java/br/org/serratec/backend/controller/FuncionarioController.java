@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.org.serratec.backend.exception.FuncionarioException;
 import br.org.serratec.backend.model.Funcionario;
 import br.org.serratec.backend.service.FuncionarioService;
 
@@ -28,15 +29,13 @@ public class FuncionarioController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Funcionario inserir(@RequestBody Funcionario funcionario) {
-		System.out.println("Inserir funcionario");
+	public Funcionario inserir(@Valid @RequestBody Funcionario funcionario) throws FuncionarioException{
 		return funcionarioService.inserir(funcionario);
 	}
 
 	@PostMapping("/inserirTodos")
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<Funcionario> inserirTodos(List<Funcionario> funcionarios) {
-		System.out.println("Inserir todos os funcionarios");
+	public List<Funcionario> inserirTodos(@Valid @RequestBody List<Funcionario> funcionarios) throws FuncionarioException {
 		return funcionarioService.inserirTodos(funcionarios);
 	}
 
@@ -51,8 +50,8 @@ public class FuncionarioController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<Funcionario> atualizar(@Valid @RequestBody Funcionario funcionario, @PathVariable Long id) {
-		return funcionarioService.atualizar(funcionario, id);
+	public ResponseEntity<Funcionario> atualizar(@PathVariable Long id, @Valid @RequestBody Funcionario funcionario) throws FuncionarioException {
+		return funcionarioService.atualizar(id, funcionario);
 	}
 
 	@DeleteMapping("{id}")

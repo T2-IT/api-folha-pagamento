@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.org.serratec.backend.exception.DependenteException;
 import br.org.serratec.backend.model.Dependente;
 import br.org.serratec.backend.service.DependenteService;
 import io.swagger.annotations.ApiOperation;
@@ -38,8 +39,7 @@ public class DependenteController {
 			@ApiResponse(code = 403, message = "Você não tem permissão para acessar o recurso"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Quando ocorre uma exceçãooo") })
-	public Dependente inserir(@RequestBody Dependente dependente) {
-		System.out.println("Inserir dependente");
+	public Dependente inserir(@Valid @RequestBody Dependente dependente) throws DependenteException {
 		return dependenteService.inserir(dependente);
 	}
 
@@ -51,8 +51,7 @@ public class DependenteController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Quando ocorre uma exceção") })
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<Dependente> inserirTodos(List<Dependente> dependentes) {
-		System.out.println("Inserir todos os dependentes");
+	public List<Dependente> inserirTodos(@Valid @RequestBody List<Dependente> dependentes) throws DependenteException {
 		return dependenteService.inserirTodos(dependentes);
 	}
 

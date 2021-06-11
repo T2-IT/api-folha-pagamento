@@ -5,6 +5,7 @@ import java.time.Period;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
@@ -13,8 +14,10 @@ import org.hibernate.validator.constraints.br.CPF;
 public abstract class Pessoa {
 
 	@Size(max = 30)
-	@Column
+	@NotBlank(message = "Nome nao cadastrado")
 	protected String nome;
+	@NotBlank(message = "Cpf nao cadastrado")
+	@Size(max = 11, min = 11)
 	protected String cpf;
 	protected LocalDate dataNascimento;
 

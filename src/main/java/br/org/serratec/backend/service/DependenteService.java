@@ -1,5 +1,7 @@
 package br.org.serratec.backend.service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import br.org.serratec.backend.exception.DependenteException;
 import br.org.serratec.backend.model.Dependente;
 import br.org.serratec.backend.model.Funcionario;
 import br.org.serratec.backend.repository.DependenteRepository;
@@ -21,13 +24,23 @@ public class DependenteService {
 	@Autowired
 	private DependenteRepository dependenteRepository;
 
-	public Dependente inserir(@RequestBody Dependente dependente) {
-		System.out.println("Inserir dependente service");
+	public Dependente inserir(@RequestBody Dependente dependente) throws DependenteException {
+		dependente.setIdade(Period.between(dependente.getDataNascimento(), LocalDate.now()));
+		if (dependente.getIdade().getYears() > 18) { 
+			throw new DependenteException("O dependente" + dependente.getNome() + " nao pode ser menor de 18 anos");
+		} else if (dependente.getDataNascimento() == LocalDate.now()) {
+			throw new DependenteException("O dependente nao pode ter nascido hoje");
+		}
 		return dependenteRepository.save(dependente);
 	}
 
-	public List<Dependente> inserirTodos(List<Dependente> dependentes) {
-		System.out.println("Inserir todos os dependentes service");
+	public List<Dependente> inserirTodos(List<Dependente> dependentes) throws DependenteException {
+		for (Dependente dependente : dependentes) {
+			dependente.setIdade(Period.between(dependente.getDataNascimento(), LocalDate.now()));
+			if (dependente.getIdade().getYears() > 18) { 
+				throw new DependenteException("O dependente" + dependente.getNome() + " nao pode ser menor de 18 anos");
+			}
+		}
 		return dependenteRepository.saveAll(dependentes);
 	}
 

@@ -1,5 +1,7 @@
 package br.org.serratec.backend.service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import br.org.serratec.backend.exception.FuncionarioException;
 import br.org.serratec.backend.model.Funcionario;
 import br.org.serratec.backend.model.TaxaIR;
 import br.org.serratec.backend.model.TaxasInss;
@@ -22,7 +25,18 @@ public class FuncionarioService {
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
 
-	public Funcionario inserir(@RequestBody Funcionario funcionario) {
+	public Funcionario inserir(@RequestBody Funcionario funcionario) throws FuncionarioException {
+		funcionario.setIdade(Period.between(funcionario.getDataNascimento(), LocalDate.now()));
+		Funcionario f = funcionarioRepository.findByCpf(funcionario.getCpf());
+		if (f != null) {
+			throw new FuncionarioException("Esse cpf ja existe");
+		} else if (funcionario.getIdade().getYears() < 18) {
+			throw new FuncionarioException("O funcionario " + funcionario.getNome() + " nao pode ser menor de 18 anos");
+		} else if (funcionario.getDataNascimento() == LocalDate.now()) {
+			throw new FuncionarioException("O funcioanrio nao pode ter nascido no dia de hoje");
+		} else if (funcionario.getDependentes().size() > 3) {
+			throw new FuncionarioException("Um funcionario nao pode ter mais de 3 dependentes");
+		}
 		if (funcionario.getSalarioBruto() >= 1100.01 && funcionario.getSalarioBruto() <= 2203.48) {
 			funcionario.setDescontoInss(
 					funcionario.getSalarioBruto() * TaxasInss.TAXA1.getTaxa() - TaxasInss.TAXA1.getDeducao());
@@ -69,7 +83,62 @@ public class FuncionarioService {
 		return funcionarioRepository.save(funcionario);
 	}
 
-	public List<Funcionario> inserirTodos(List<Funcionario> funcionarios) {
+	public List<Funcionario> inserirTodos(List<Funcionario> funcionarios) throws FuncionarioException {
+		for (Funcionario funcionario : funcionarios) {
+			funcionario.setIdade(Period.between(funcionario.getDataNascimento(), LocalDate.now()));
+			Funcionario f = funcionarioRepository.findByCpf(funcionario.getCpf());
+			if (f != null) {
+				throw new FuncionarioException("Esse cpf ja existe");
+			} else if (funcionario.getIdade().getYears() < 18) {
+				throw new FuncionarioException("O funcionario " + funcionario.getNome() + " nao pode ser menor de 18 anos");
+			} else if (funcionario.getDataNascimento() == LocalDate.now()) {
+				throw new FuncionarioException("O funcioanrio nao pode ter nascido no dia de hoje");
+			} else if (funcionario.getDependentes().size() > 3) {
+				throw new FuncionarioException("Um funcionario nao pode ter mais de 3 dependentes");
+			}
+			if (funcionario.getSalarioBruto() >= 1100.01 && funcionario.getSalarioBruto() <= 2203.48) {
+				funcionario.setDescontoInss(
+						funcionario.getSalarioBruto() * TaxasInss.TAXA1.getTaxa() - TaxasInss.TAXA1.getDeducao());
+				funcionario.setTaxasInss(TaxasInss.TAXA1);
+			} else if (funcionario.getSalarioBruto() >= 2203.49 && funcionario.getSalarioBruto() <= 3305.22) {
+				funcionario.setDescontoInss(
+						funcionario.getSalarioBruto() * TaxasInss.TAXA2.getTaxa() - TaxasInss.TAXA2.getDeducao());
+				funcionario.setTaxasInss(TaxasInss.TAXA3);
+			} else if (funcionario.getSalarioBruto() >= 3305.23 && funcionario.getSalarioBruto() <= 6433.57) {
+				funcionario.setDescontoInss(
+						funcionario.getSalarioBruto() * TaxasInss.TAXA3.getTaxa() - TaxasInss.TAXA3.getDeducao());
+				funcionario.setTaxasInss(TaxasInss.TAXA4);
+			} else if (funcionario.getSalarioBruto() > 6433.57) {
+				funcionario.setDescontoInss(6433.57 * TaxasInss.TAXA4.getTaxa() - TaxasInss.TAXA4.getDeducao());
+				funcionario.setTaxasInss(TaxasInss.TAXA4);
+			} else {
+				funcionario.setDescontoInss(
+						funcionario.getSalarioBruto() * TaxasInss.TAXA5.getTaxa() - TaxasInss.TAXA5.getDeducao());
+				funcionario.setTaxasInss(TaxasInss.TAXA5);
+			}
+
+			if (funcionario.getSalarioBruto() < 1903.98) {
+				funcionario.setDescontoIR(0);
+			} else if (funcionario.getSalarioBruto() >= 1903.98 && funcionario.getSalarioBruto() <= 2826.65) {
+				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+						- funcionario.getDescontoInss()) * TaxaIR.TAXA1.getAliquota()) - TaxaIR.TAXA1.getDeducao());
+				funcionario.setTaxaIR(TaxaIR.TAXA1);
+			} else if (funcionario.getSalarioBruto() >= 2826.66 && funcionario.getSalarioBruto() <= 3751.05) {
+				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+						- funcionario.getDescontoInss()) * TaxaIR.TAXA2.getAliquota()) - TaxaIR.TAXA2.getDeducao());
+				funcionario.setTaxaIR(TaxaIR.TAXA2);
+			} else if (funcionario.getSalarioBruto() >= 3751.06 && funcionario.getSalarioBruto() <= 4664.68) {
+				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+						- funcionario.getDescontoInss()) * TaxaIR.TAXA3.getAliquota()) - TaxaIR.TAXA3.getDeducao());
+				funcionario.setTaxaIR(TaxaIR.TAXA3);
+			} else {
+				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+						- funcionario.getDescontoInss()) * TaxaIR.TAXA4.getAliquota()) - TaxaIR.TAXA4.getDeducao());
+				funcionario.setTaxaIR(TaxaIR.TAXA4);
+			}
+			funcionario.setSalarioLiquido(
+					funcionario.getSalarioBruto() - funcionario.getDescontoInss() - funcionario.getDescontoIR());
+		}
 		return funcionarioRepository.saveAll(funcionarios);
 	}
 
@@ -139,7 +208,8 @@ public class FuncionarioService {
 		return ResponseEntity.ok(funcionarios);
 	}
 
-	public ResponseEntity<Funcionario> atualizar(@Valid @RequestBody Funcionario funcionario, @PathVariable Long id) {
+	public ResponseEntity<Funcionario> atualizar(@PathVariable Long id, @Valid @RequestBody Funcionario funcionario)
+			throws FuncionarioException {
 		if (!funcionarioRepository.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
