@@ -50,7 +50,7 @@ public class Funcionario extends Pessoa {
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
-	@Size(max = 3)
+	@Size(max = 3, message = "Um funcionario nao poder ter mais de 3 dependentes")
 	private List<Dependente> dependentes = new ArrayList<Dependente>();
 
 	public Funcionario() {

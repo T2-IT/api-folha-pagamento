@@ -90,7 +90,8 @@ public class FuncionarioService {
 			if (f != null) {
 				throw new FuncionarioException("Esse cpf ja existe");
 			} else if (funcionario.getIdade().getYears() < 18) {
-				throw new FuncionarioException("O funcionario " + funcionario.getNome() + " nao pode ser menor de 18 anos");
+				throw new FuncionarioException(
+						"O funcionario " + funcionario.getNome() + " nao pode ser menor de 18 anos");
 			} else if (funcionario.getDataNascimento() == LocalDate.now()) {
 				throw new FuncionarioException("O funcioanrio nao pode ter nascido no dia de hoje");
 			} else if (funcionario.getDependentes().size() > 3) {
@@ -120,20 +121,28 @@ public class FuncionarioService {
 			if (funcionario.getSalarioBruto() < 1903.98) {
 				funcionario.setDescontoIR(0);
 			} else if (funcionario.getSalarioBruto() >= 1903.98 && funcionario.getSalarioBruto() <= 2826.65) {
-				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
-						- funcionario.getDescontoInss()) * TaxaIR.TAXA1.getAliquota()) - TaxaIR.TAXA1.getDeducao());
+				funcionario
+						.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+								- funcionario.getDescontoInss()) * TaxaIR.TAXA1.getAliquota())
+								- TaxaIR.TAXA1.getDeducao());
 				funcionario.setTaxaIR(TaxaIR.TAXA1);
 			} else if (funcionario.getSalarioBruto() >= 2826.66 && funcionario.getSalarioBruto() <= 3751.05) {
-				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
-						- funcionario.getDescontoInss()) * TaxaIR.TAXA2.getAliquota()) - TaxaIR.TAXA2.getDeducao());
+				funcionario
+						.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+								- funcionario.getDescontoInss()) * TaxaIR.TAXA2.getAliquota())
+								- TaxaIR.TAXA2.getDeducao());
 				funcionario.setTaxaIR(TaxaIR.TAXA2);
 			} else if (funcionario.getSalarioBruto() >= 3751.06 && funcionario.getSalarioBruto() <= 4664.68) {
-				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
-						- funcionario.getDescontoInss()) * TaxaIR.TAXA3.getAliquota()) - TaxaIR.TAXA3.getDeducao());
+				funcionario
+						.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+								- funcionario.getDescontoInss()) * TaxaIR.TAXA3.getAliquota())
+								- TaxaIR.TAXA3.getDeducao());
 				funcionario.setTaxaIR(TaxaIR.TAXA3);
 			} else {
-				funcionario.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
-						- funcionario.getDescontoInss()) * TaxaIR.TAXA4.getAliquota()) - TaxaIR.TAXA4.getDeducao());
+				funcionario
+						.setDescontoIR(((funcionario.getSalarioBruto() - (funcionario.getDependentes().size() * 189.59)
+								- funcionario.getDescontoInss()) * TaxaIR.TAXA4.getAliquota())
+								- TaxaIR.TAXA4.getDeducao());
 				funcionario.setTaxaIR(TaxaIR.TAXA4);
 			}
 			funcionario.setSalarioLiquido(
@@ -150,9 +159,17 @@ public class FuncionarioService {
 		return ResponseEntity.notFound().build();
 	}
 
-	public ResponseEntity<List<Funcionario>> listar() {
+	public ResponseEntity<List<Funcionario>> listar() throws FuncionarioException {
 		List<Funcionario> funcionarios = funcionarioRepository.findAll();
 		for (Funcionario funcionario : funcionarios) {
+			if (funcionario.getIdade().getYears() < 18) {
+				throw new FuncionarioException(
+						"O funcionario " + funcionario.getNome() + " nao pode ser menor de 18 anos");
+			} else if (funcionario.getDataNascimento() == LocalDate.now()) {
+				throw new FuncionarioException("O funcioanrio nao pode ter nascido no dia de hoje");
+			} else if (funcionario.getDependentes().size() > 3) {
+				throw new FuncionarioException("Um funcionario nao pode ter mais de 3 dependentes");
+			}
 			if (funcionario.getSalarioBruto() >= 1100.01 && funcionario.getSalarioBruto() <= 2203.48) {
 				funcionario.setDescontoInss(
 						funcionario.getSalarioBruto() * TaxasInss.TAXA1.getTaxa() - TaxasInss.TAXA1.getDeducao());

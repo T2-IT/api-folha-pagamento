@@ -45,7 +45,7 @@ public class FuncionarioController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Funcionario>> listar() {
+	public ResponseEntity<List<Funcionario>> listar() throws FuncionarioException {
 		return funcionarioService.listar();
 	}
 
