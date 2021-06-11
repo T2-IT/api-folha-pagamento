@@ -16,6 +16,10 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -46,7 +50,8 @@ public class Funcionario extends Pessoa {
 	
 //	@ApiModelProperty(value = "Calcula idade do funcionario")
 //	private Period period;
-
+	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
 	private List<Dependente> dependentes = new ArrayList<Dependente>();
 

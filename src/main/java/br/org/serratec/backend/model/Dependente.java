@@ -13,6 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.data.annotation.Reference;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -29,7 +33,8 @@ public class Dependente extends Pessoa {
 
 //	@ApiModelProperty("Calcula idade do dependente")
 //	private Period period;
-
+	
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "id_funcionario")
 	private Funcionario funcionario;
