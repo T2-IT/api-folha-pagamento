@@ -42,7 +42,7 @@ public class Funcionario extends Pessoa {
 	@ApiModelProperty(value = "Taxas Inss do funcionario")
 	private TaxasInss taxasInss;
 
-	@ApiModelProperty(value = "Taxa IR o funcionario")
+	@ApiModelProperty(value = "Taxa IR do funcionario")
 	private TaxaIR taxaIR;
 
 	@ApiModelProperty(value = "Calcula idade do funcionario")

@@ -25,7 +25,7 @@ public class Dependente extends Pessoa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_dependente")
-	@ApiModelProperty(value = "Identificador único do cliente")
+	@ApiModelProperty(value = "Identificador único do dependente")
 	private Long id;
 
 	@ApiModelProperty(value = "Enum que define o parentesco do dependente")
